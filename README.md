@@ -33,7 +33,7 @@ This project is a Money Lending application that supports user signup, login, bo
 1. Start the server:
    
     ```sh
-    npm start
+    npm mainApp.js
 The server will run on port 3000 by default. You can change the port in the app.js file if needed.
 
 ## API Endpoints
