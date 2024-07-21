@@ -10,6 +10,7 @@ This project is a Money Lending application that supports user signup, login, bo
   - [Login](#login)
   - [Get User Data](#get-user-data)
   - [Borrow Money](#borrow-money)
+- [API Endpoints Screenshots](#api-endpoints-screenshots)
 
 
 ## Installation
@@ -118,6 +119,8 @@ json
       "totalLoanAmount": 7000,
       "totalMonthlyRepayment": 608.9190035979541
      }
+
+## API Endpoints Screenshots
 
 ### Signup API Endpoint - 
 ![Signup_Endpoint](https://github.com/user-attachments/assets/737e0cb4-88d9-4f67-abb5-4c59fec6f8cb)
