@@ -1,17 +1,30 @@
-const mongoose = require('mongoose');
+const mongoDatabase = require('mongoose');
 
-// Define the Schema for the user 
-const UserSchema = new mongoose.Schema({
-    phoneNumber: { type: String, required: true }, // Phone number of the user 
-    email: { type: String, required: true, unique: true }, // Email address of the user (must be unique)
+// Define a schema for loan repayments
+const RepaymentSchema = new mongoDatabase.Schema({
+    amount: { type: Number },
+    tenureMonths: { type: Number },
+    monthlyRepayment: { type: Number }
+}, { _id: false }); // Disable _id for sub-documents
+
+// Define the User schema
+const UserSchema = new mongoDatabase.Schema({
+    phoneNumber: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
     name: { type: String, required: true },
-    registrationDate: { type: Date, default: Date.now }, // Date when the user registered (default to the current date and time)
-    dob: { type: Date, required: true }, // Date of birth of the user
+    registrationDate: { type: Date, default: Date.now },
+    dob: { type: Date, required: true },
     monthlySalary: { type: Number, required: true },
-    status: { type: String, enum: ['Pending', 'Approved', 'Rejected'], default: 'Pending' }, // Status of the user's application with possible values: 'Pending', 'Approved', 'Rejected'
-    password: { type: String, required: true }, // Encrypted password of the user
-    purchasePower: { type: Number, default: 0 },  // Purchase power of the user (default is 0)
-});
+    status: { type: String, enum: ['Pending', 'Approved', 'Rejected'], default: 'Pending' },
+    password: { type: String, required: true },
+    purchasePower: { type: Number, default: 1000000 },
+    totalLoanAmount: { type: Number, default: 0, select: false },
+    totalMonthlyRepayment: { type: Number, default: 0, select: false },
+    repayments: [RepaymentSchema] // Use the nested schema for repayments
+}, { collection: 'User' });
 
-// Create and export the model based on the UserSchema
-module.exports = mongoose.model('User', UserSchema);
+const User = mongoDatabase.model('User', UserSchema);
+
+module.exports = User;
+
+

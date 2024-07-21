@@ -1,9 +1,10 @@
 const express = require('express');
-const connectDB = require('./Database/connection'); // Import the database connection function
+const connectDataBase = require('./Database/connection'); // Import the database connection function
 const app = express(); // Create an instance of the Express application
 
 // Connect Database
-connectDB();
+connectDataBase();
+
 
 // Middleware to parse incoming JSON requests
 app.use(express.json({ extended: false }));

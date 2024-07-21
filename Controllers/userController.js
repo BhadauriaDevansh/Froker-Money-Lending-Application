@@ -27,19 +27,21 @@ exports.signup = async (req, res) => {
             monthlySalary,
             password,
             status: 'Approved',
-            purchasePower: 0 // Initial purchase power is 0
+            purchasePower: 1000000, // Initial purchase power is 0
+            totalLoanAmount: 0, // Initial total loan amount
+            totalMonthlyRepayment: 0 // Initial total monthly repayment
         });
 
         // Hash password
-        const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(password, salt);
+        const encryptedPassword = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(password,encryptedPassword);
 
         // Save user to database
         await user.save();
 
         // Generate JWT token
         const payload = { user: { id: user.id } };
-        jwt.sign(payload, 'your_jwt_secret', { expiresIn: '1h' }, (err, token) => {
+        jwt.sign(payload, 'jwtSecretKey', { expiresIn: '1h' }, (err, token) => {
             if (err) throw err;
             res.json({ token });
         });
@@ -56,15 +58,15 @@ exports.login = async (req, res) => {
     try {
         // Check if user exists
         let user = await User.findOne({ email });
-        if (!user) return res.status(400).json({ msg: 'Invalid Credentials' });
+        if (!user) return res.status(400).json({ msg: 'Invalid User Email' });
 
         // Compare passwords
         const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(400).json({ msg: 'Invalid Credentials' });
+        if (!isMatch) return res.status(400).json({ msg: 'Invalid User Password' });
 
         // Generate JWT token
         const payload = { user: { id: user.id } };
-        jwt.sign(payload, 'your_jwt_secret', { expiresIn: '1h' }, (err, token) => {
+        jwt.sign(payload, 'jwtSecretKey', { expiresIn: '1h' }, (err, token) => {
             if (err) throw err;
             res.json({ token });
         });
@@ -77,10 +79,9 @@ exports.login = async (req, res) => {
 // Show User Data
 exports.getUser = async (req, res) => {
     try {
-        // Fetch user details excluding password
-        const user = await User.findById(req.user.id).select('-password');
-
-        // Return the user data including date and time
+        // Fetch user details by inserting the generated token in body
+        const user = await User.findById(req.user.id)
+            .select('-password -totalLoanAmount -totalMonthlyRepayment -repayments');
         res.json(user);
     } catch (err) {
         console.error(err.message);
@@ -98,31 +99,44 @@ exports.borrowMoney = async (req, res) => {
     }
 
     try {
-        // Find user and check existence
+        // Find user by inserting the generated token in body and check existence
         let user = await User.findById(req.user.id);
         if (!user) return res.status(400).json({ msg: 'User not found' });
 
-        // Check if the requested amount exceeds the total available funds
-        if (amount > totalAvailableFunds) {
-            return res.status(400).json({ msg: 'Requested amount exceeds available funds' });
+        // Check if the requested amount exceeds the user's purchase power
+        if (amount > user.purchasePower) {
+            return res.status(400).json({ msg: 'Requested amount exceeds purchase power' });
         }
 
-        // Calculate monthly repayment with interest
-        const interestRate = 0.08;
-        const monthlyRepayment = (amount * (1 + interestRate)) / tenureMonths;
+        // Calculate monthly repayment for the new amount borrowed
+        const annualInterestRate = 0.08; // 8% annual interest
+        const monthlyInterestRate = annualInterestRate / 12;
+        const newMonthlyRepayment = (amount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, tenureMonths)) / (Math.pow(1 + monthlyInterestRate, tenureMonths) - 1);
 
-        // Update total available funds and user's purchase power
-        totalAvailableFunds -= amount;
-        user.purchasePower += amount;
+        // Update user details
+        user.totalLoanAmount = (user.totalLoanAmount || 0) + amount;
+
+        // Add new repayment to the list of repayments
+        user.repayments = user.repayments || []; // Initialize if not exists
+        user.repayments.push({
+            amount,
+            tenureMonths,
+            monthlyRepayment: newMonthlyRepayment
+        });
+
+        // Recalculate total monthly repayment
+        user.totalMonthlyRepayment = user.repayments.reduce((total, repayment) => total + repayment.monthlyRepayment, 0);
+
+        user.purchasePower -= amount;
         await user.save();
 
         res.json({
             purchasePower: user.purchasePower, // Updated purchase power after borrowing
-            monthlyRepayment,
+            totalLoanAmount: user.totalLoanAmount, // Total loan amount after borrowing
+            totalMonthlyRepayment: user.totalMonthlyRepayment // Cumulative monthly repayment amount
         });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
     }
 };
-

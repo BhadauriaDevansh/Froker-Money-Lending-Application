@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router(); // Create an Express router instance
-const auth = require('../Middlewares/authentication'); // Import authentication middleware
+const auth = require('../Auth/authentication'); // Import authentication middleware
 const {
     signup,
     login,

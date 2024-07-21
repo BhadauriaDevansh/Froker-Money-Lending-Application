@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
+const mongoDatabase = require('mongoose');
 
 // Function to connect to MongoDB
 const connectDB = async () => {
     try {
         // Connect to MongoDB database named 'moneyLending' on localhost
-        await mongoose.connect('mongodb://localhost:27017/moneyLending');
+        await mongoDatabase.connect('mongodb://localhost:27017/moneyLending'); 
         console.log('MongoDB is connected'); // Log success message if connection is established
     } catch (err) {
         console.error(err.message); // Log error message if connection fails
