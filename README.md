@@ -107,14 +107,43 @@ json
     
 Request Body: json
     
-      {  "amount": 10000,
+      {  "amount": 7000,
          "tenureMonths": 12
       }
 
 Response:
 json
-```sh
-{
-    "purchasePower": -10000,
-    "monthlyRepayment": 900
-}
+  
+    { "purchasePower": 993000,
+      "totalLoanAmount": 7000,
+      "totalMonthlyRepayment": 608.9190035979541
+     }
+
+### Signup API Endpoint - 
+![Signup_Endpoint](https://github.com/user-attachments/assets/737e0cb4-88d9-4f67-abb5-4c59fec6f8cb)
+
+### Login API Endpoint - 
+![Login_Endpoint](https://github.com/user-attachments/assets/7f764aee-9600-40f5-848c-5d56bc68732d)
+
+### Get User Endpoint -
+
+![User_Endpoint](https://github.com/user-attachments/assets/5d85048e-2a64-4a2d-b2f6-bd03ee94f73c)
+
+### Borrow Money Endpoints - 
+
+![MoneyBorrow_Endpoint1](https://github.com/user-attachments/assets/1c916f68-cd35-42da-be79-5df8090c92b5)
+
+![MoneyBorrow_Endpoint2](https://github.com/user-attachments/assets/a8cf0189-8b1c-4f70-ae3c-9e47c279ffe2)
+
+
+
+
+
+
+
+
+
+
+
+
+
