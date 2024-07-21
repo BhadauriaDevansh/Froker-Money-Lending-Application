@@ -41,9 +41,10 @@ The server will run on port 3000 by default. You can change the port in the app.
 
 ### Sign Up
 
-Endpoint: POST /api/signup
+### Endpoint: POST /api/signup
 Description: Approves or rejects the application based on user age and monthly salary. Registers the user after all verification.
-Request Body:
+
+Request Body: json
     
     { "phone": "9853898271",
       "email": "user@example.com",
@@ -57,12 +58,13 @@ Request Body:
 Response:
 json
     
-    { "token": "jwtSecretKey" }
+    { "token": "your_jwtSecretKey" }
 
 ### Login
 
-Endpoint: POST /api/login
+### Endpoint: POST /api/login
 Description: Allows user to login using email and password. Uses JWT for authentication.
+
 Request Body:
 json
   
@@ -73,16 +75,17 @@ json
 Response:
 json
   
-    { "token": "jwtSecretKey" }
+    { "token": "your_jwtSecretKey" }
     
 ### Get User Data
 
-Endpoint: GET /api/user
+### Endpoint: GET /api/user
 Description: Shows user data with various fields.
+
 Headers:
 json
     
-     { "authenticationToken": "jwtSecretKey" }
+     { "authenticationToken": "your_jwtSecretKey" }
      
 Response:
 json
@@ -99,8 +102,10 @@ json
     
 ### Borrow Money
 
-Endpoint: POST /api/borrow
-Description: Allows the user to borrow money from the application and updates the Purchase Power amount.
+### Endpoint: POST /api/borrow
+Description: 
+Allows the user to borrow money from the application and updates the Purchase Power amount(Default 10 Lakhs), totalLoanAmount, totalMonthlyRepayment.
+
 Headers:
 json
     
@@ -137,6 +142,13 @@ json
 ![MoneyBorrow_Endpoint1](https://github.com/user-attachments/assets/1c916f68-cd35-42da-be79-5df8090c92b5)
 
 ![MoneyBorrow_Endpoint2](https://github.com/user-attachments/assets/a8cf0189-8b1c-4f70-ae3c-9e47c279ffe2)
+
+### MongoDB - 
+
+![image](https://github.com/user-attachments/assets/69e2253c-08fb-407b-823e-9420a2f7b218)
+
+![image](https://github.com/user-attachments/assets/18c7db6e-f030-41e4-90a9-66b21c81033b)
+
 
 
 
