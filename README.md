@@ -109,7 +109,7 @@ Allows the user to borrow money from the application and updates the Purchase Po
 Headers:
 json
     
-    { "authenticationToken": "jwtSecretKey" }
+    { "authenticationToken": "your_jwtSecretKey" }
     
 Request Body: json
     
